@@ -11,6 +11,7 @@ import android.widget.EditText
 import com.google.android.gms.plus.PlusOneButton
 import com.keiapp.birthdaycounter.IActionEventListener
 import com.keiapp.birthdaycounter.R
+import com.keiapp.birthdaycounter.dialog.DialogUtils
 
 /**
  * create an instance of this fragment.
@@ -45,7 +46,7 @@ class InputScheduleFragment : Fragment() {
 
         val edit: EditText = view.findViewById<View>(R.id.schedule_edit_text) as EditText
         edit.setOnClickListener({
-            mEventListener?.onClickButton(view)
+            DialogUtils.showDatePickerDialog(activity, R.layout.fragment_dialog, "dialog_fragment")
         })
 
 
@@ -65,6 +66,7 @@ class InputScheduleFragment : Fragment() {
     fun onButtonPressed(uri: Uri) {
         mEventListener?.onButtonPressed(uri)
     }
+
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)

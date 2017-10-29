@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.keiapp.birthdaycounter.IActionEventListener
 import com.keiapp.birthdaycounter.R
-import com.keiapp.birthdaycounter.dialog.DialogUtils
 import com.keiapp.birthdaycounter.fragment.InputScheduleFragment
 
 /**
@@ -28,7 +27,7 @@ class InputScheduleDateActivity : AppCompatActivity(), IActionEventListener {
     }
 
     override fun onClickButton(view: View) {
-        DialogUtils.showDatePickerDialog(this, R.layout.fragment_dialog, "dialog_fragment")
+
     }
 
     override fun onButtonPressed(uri: Uri) {

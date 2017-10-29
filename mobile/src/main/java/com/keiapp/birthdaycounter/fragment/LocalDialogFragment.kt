@@ -1,24 +1,25 @@
 package com.keiapp.birthdaycounter.fragment
 
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.keiapp.birthdaycounter.IActionEventListener
+import android.widget.Button
+import com.keiapp.birthdaycounter.DialogActionInterface
+import com.keiapp.birthdaycounter.R
 import com.keiapp.birthdaycounter.dialog.AbstractDialogFragment
 
 class LocalDialogFragment : AbstractDialogFragment<DialogFragment>() {
     private val mLayoutId: Int by lazy { arguments.getInt(ARG_LAYOUT_ID) }
 
-    private var mEventListener: IActionEventListener? = null
+    private var mEventListener: DialogActionInterface? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val context = activity.applicationContext
-        mEventListener = if (context is IActionEventListener) {
+        mEventListener = if (context is DialogActionInterface) {
             context
         } else {
             null
@@ -28,11 +29,12 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(mLayoutId, container, false)
-    }
-
-    fun onButtonPressed(uri: Uri) {
-        mEventListener?.onButtonPressed(uri)
+        val view = inflater.inflate(mLayoutId, container, false)
+        val negativeButton = view.findViewById<Button>(R.id.negative_button) as Button
+        negativeButton.setOnClickListener { mEventListener?.cancel() }
+        val positiveButton = view.findViewById<Button>(R.id.positive_button) as Button
+        positiveButton.setOnClickListener { mEventListener?.agreed() }
+        return view
     }
 
     override fun onDetach() {
