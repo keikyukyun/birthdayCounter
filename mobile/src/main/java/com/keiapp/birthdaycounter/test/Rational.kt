@@ -9,8 +9,8 @@ class Rational(n: Int, d: Int) {
         require(d != 0, { "denominator must not be null" }) // 要求に反した場合は、illegalArgumentExceptionがthrowされる
     }
 
-    val str: String by lazy { "初期化します" }
-    private val g by lazy { gcd(Math.abs(n), Math.abs(d))}
+    val str: String by lazy { "初期化します" } // 遅延初期化（by ** は移譲プロパティのこと。
+    private val g by lazy { gcd(Math.abs(n), Math.abs(d)) }
     private val numerator: Int = n / g
     private val denominator: Int = d / g
 
@@ -27,4 +27,30 @@ class Rational(n: Int, d: Int) {
     tailrec private fun gcd(a: Int, b: Int): Int =
             if (b == 0) a
             else gcd(b, a % b)
+
+    // ローカル関数
+    /**
+     * goがローカル関数で、再帰呼出しを行っている。
+     * ローカル関数goをreturnで呼び出している。今まで一つのメソッドだけで呼び出していたprivateなメソッドが
+     * ローカルで使用できるのでスコープ制限もできるので便利！！
+     */
+    fun sum(numbers: List<Long>): Long {
+        tailrec fun go(numbers: List<Long>, accumulator: Long): Long =
+                if (numbers.isEmpty()) accumulator
+                else go(numbers.drop(1), accumulator + numbers.first())
+        return go(numbers, 0)
+    }
+
+    // ↓
+    // 上のsumはラムダを使っていい感じにできるのか
+    fun sumsum(numbers: List<Long>): Long {
+        // これはだめ
+        val go: (List<Long>, Long) -> Long = { numbers: List<Long>, accumulator: Long ->
+            if (numbers.isEmpty()) accumulator
+            else go(numbers.drop(1), accumulator + numbers.first())
+        }
+
+        // 再帰呼び出しができない？要確認
+    }
+
 }

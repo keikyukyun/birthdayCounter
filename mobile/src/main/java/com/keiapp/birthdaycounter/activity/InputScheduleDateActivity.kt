@@ -1,15 +1,13 @@
 package com.keiapp.birthdaycounter.activity
 
-import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import com.keiapp.birthdaycounter.IActionEventListener
 import com.keiapp.birthdaycounter.R
 import com.keiapp.birthdaycounter.fragment.InputScheduleFragment
 
 /**
- * Created by murakamikei on 2017/09/23.
+ * スケジュール入力するアクティビティ。
  */
 class InputScheduleDateActivity : AppCompatActivity(), IActionEventListener {
     private val TAG : String = "input_fragment"
@@ -26,11 +24,7 @@ class InputScheduleDateActivity : AppCompatActivity(), IActionEventListener {
         transaction.commit()
     }
 
-    override fun onClickButton(view: View) {
+    override fun onEnd() {
 
-    }
-
-    override fun onButtonPressed(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

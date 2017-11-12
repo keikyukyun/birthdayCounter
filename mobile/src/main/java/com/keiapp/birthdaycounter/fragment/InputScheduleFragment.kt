@@ -1,7 +1,6 @@
 package com.keiapp.birthdaycounter.fragment
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -17,6 +16,7 @@ import com.keiapp.birthdaycounter.dialog.DialogUtils
  * create an instance of this fragment.
  */
 class InputScheduleFragment : Fragment() {
+    // Plusonebuttonは使用しないが、よく知らないコードなのであとで勉強するために残しておく。
     // The URL to +1.  Must be a valid URL.
     private val PLUS_ONE_URL = "http://developer.android.com"
     // TODO: Rename and change types of parameters
@@ -42,7 +42,7 @@ class InputScheduleFragment : Fragment() {
         //Find the +1 button
         view?:return null
 
-        mPlusOneButton = view.findViewById<View>(R.id.plus_one_button) as PlusOneButton
+//        mPlusOneButton = view.findViewById<View>(R.id.plus_one_button) as PlusOneButton
 
         val edit: EditText = view.findViewById<View>(R.id.schedule_edit_text) as EditText
         edit.setOnClickListener({
@@ -61,12 +61,6 @@ class InputScheduleFragment : Fragment() {
             it.initialize(PLUS_ONE_URL, PLUS_ONE_REQUEST_CODE)
         }
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        mEventListener?.onButtonPressed(uri)
-    }
-
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)

@@ -1,18 +1,17 @@
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:plus="http://schemas.android.com/apk/lib/com.google.android.gms.plus"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.keiapp.birthdaycounter.fragment.InputScheduleFragment">
 
-    <com.google.android.gms.plus.PlusOneButton
-        android:id="@+id/plus_one_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        plus:annotation="inline"
-        plus:size="standard" />
+    <!--PlusOneButtonは今後勉強するために残しておく。-->
+    <!--<com.google.android.gms.plus.PlusOneButton-->
+    <!--android:id="@+id/plus_one_button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--plus:annotation="inline"-->
+    <!--plus:size="standard" />-->
 
     <TextView
         android:id="@+id/explanation_text"
