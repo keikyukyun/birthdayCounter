@@ -45,12 +45,36 @@ class Rational(n: Int, d: Int) {
     // 上のsumはラムダを使っていい感じにできるのか
     fun sumsum(numbers: List<Long>): Long {
         // これはだめ
+        // 再帰呼び出しができない？
         val go: (List<Long>, Long) -> Long = { numbers: List<Long>, accumulator: Long ->
-            if (numbers.isEmpty()) accumulator
-            else go(numbers.drop(1), accumulator + numbers.first())
+            //            if (numbers.isEmpty()) accumulator
+//            else go(numbers.drop(1), accumulator + numbers.first()) ←ここでgo（要するに自分呼び出しが不可
+            sum(numbers) + accumulator
         }
 
-        // 再帰呼び出しができない？要確認
+        return go(numbers, 0)
+    }
+
+    // デフォルト引数のメソッド
+    private fun test(number: Long = 0): Long {
+        // デフォルト引数があるメソッドは引数を省略できる
+        test()
+
+        // もちろんデフォルト以外が良い場合はそれ以外を指定することもできる
+        test(10)
+
+        // 名前付きで引数を指定することができる。引数が多いときに使うとわかりやすくなりそう
+        test(number = 10)
+
+        // test2みたいな、全部Long型の場合で名前付きじゃないと
+        test2(0, 3, 25)
+        test2(memberId = 0, memberOfNumber = 3, memberAge = 25)
+
+        return 0
+    }
+
+    private fun test2(memberId: Long, memberOfNumber: Long, memberAge: Long) {
+
     }
 
 }
