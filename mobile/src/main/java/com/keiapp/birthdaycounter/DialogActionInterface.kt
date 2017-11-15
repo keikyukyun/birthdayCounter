@@ -1,9 +1,11 @@
 package com.keiapp.birthdaycounter
 
+import java.io.Serializable
+
 /**
  * Created by murakamikei on 2017/10/29.
  */
-interface DialogActionInterface {
+interface DialogActionInterface : Serializable {
     /**
      * ダイアログでキャンセルをした。
      */

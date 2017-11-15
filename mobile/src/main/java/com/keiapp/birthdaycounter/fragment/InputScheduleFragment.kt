@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.google.android.gms.plus.PlusOneButton
+import com.keiapp.birthdaycounter.DialogActionInterface
 import com.keiapp.birthdaycounter.IActionEventListener
 import com.keiapp.birthdaycounter.R
 import com.keiapp.birthdaycounter.dialog.DialogUtils
@@ -15,7 +16,7 @@ import com.keiapp.birthdaycounter.dialog.DialogUtils
 /**
  * create an instance of this fragment.
  */
-class InputScheduleFragment : Fragment() {
+class InputScheduleFragment : Fragment(), DialogActionInterface {
     // Plusonebuttonは使用しないが、よく知らないコードなのであとで勉強するために残しておく。
     // The URL to +1.  Must be a valid URL.
     private val PLUS_ONE_URL = "http://developer.android.com"
@@ -46,7 +47,7 @@ class InputScheduleFragment : Fragment() {
 
         val edit: EditText = view.findViewById<View>(R.id.schedule_edit_text) as EditText
         edit.setOnClickListener({
-            DialogUtils.showDatePickerDialog(activity, R.layout.fragment_dialog, "dialog_fragment")
+            DialogUtils.showDatePickerDialog(activity, this, R.layout.fragment_dialog, "dialog_fragment")
         })
 
 
@@ -74,6 +75,19 @@ class InputScheduleFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         mEventListener = null
+    }
+
+    override fun cancel() {
+        android.util.Log.e("mura", "cancel")
+        DialogUtils.dismiss()
+    }
+
+    override fun agreed() {
+
+    }
+
+    override fun continued() {
+
     }
 
     companion object {

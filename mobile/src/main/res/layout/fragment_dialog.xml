@@ -10,40 +10,7 @@
         android:id="@+id/date_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/button_container"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- includeだと効かない？？？？ -->
-    <include
-        layout="@layout/dialog_button"
-        android:visibility="gone" />
-
-    <!-- LinearLayoutを追加してみる -->
-    <LinearLayout
-        android:id="@+id/button_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <Button
-            android:id="@+id/negative_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="20dp"
-            android:text="Cancel" />
-
-        <Button
-            android:id="@+id/positive_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="20dp"
-            android:text="OK" />
-    </LinearLayout>
-
 </android.support.constraint.ConstraintLayout>
