@@ -1,8 +1,6 @@
 package com.keiapp.birthdaycounter.dialog
 
 import android.support.v4.app.FragmentActivity
-import com.keiapp.birthdaycounter.DialogActionInterface
-import com.keiapp.birthdaycounter.fragment.LocalDialogFragment
 
 /**
  * Created by murakamikei on 2017/09/24.

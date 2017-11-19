@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.google.android.gms.plus.PlusOneButton
-import com.keiapp.birthdaycounter.DialogActionInterface
 import com.keiapp.birthdaycounter.IActionEventListener
 import com.keiapp.birthdaycounter.R
+import com.keiapp.birthdaycounter.dialog.DialogActionInterface
 import com.keiapp.birthdaycounter.dialog.DialogUtils
 
 /**

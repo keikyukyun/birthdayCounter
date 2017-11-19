@@ -1,4 +1,4 @@
-package com.keiapp.birthdaycounter
+package com.keiapp.birthdaycounter.dialog
 
 import java.io.Serializable
 
