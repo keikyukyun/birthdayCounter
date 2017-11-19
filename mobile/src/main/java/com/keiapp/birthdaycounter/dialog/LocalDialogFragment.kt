@@ -79,10 +79,10 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
             }
 
             private fun getContext(): Context? {
-                fieldActivity?.let { return fieldActivity }
+                fieldActivity?.let { return it.applicationContext }
                 fieldFragment?.let {
                     if (fieldFragment is Fragment) {
-                        return it.context
+                        return it.activity.applicationContext
                     }
                 }
                 return null
