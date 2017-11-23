@@ -15,17 +15,11 @@ class DevModeAdapter(private val mContext : Context?, private val mLayoutId : In
         mInflater = LayoutInflater.from(mContext)
     }
 
-    override fun getItem(position: Int): Any {
-        return 0
-    }
+    override fun getItem(position: Int): Any = 0
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getItemId(position: Int): Long = position.toLong()
 
-    override fun getCount(): Int {
-        return 10
-    }
+    override fun getCount(): Int = 10
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var convertView = convertView

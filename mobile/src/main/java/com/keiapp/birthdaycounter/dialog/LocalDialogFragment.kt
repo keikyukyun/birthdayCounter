@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
@@ -60,6 +61,7 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
             private var fieldActivity: AppCompatActivity?
             private var fieldFragment: Fragment?
             private var fieldTitle: String? = null
+            private var fieldMessage: String? = null
             private var fieldItems: Array<String?>? = null
             private var fieldPositiveButtonLabel: String? = null
             private var fieldNegativeButtonLabel: String? = null
@@ -88,16 +90,101 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
                 return null
             }
 
-            fun title(title: String): Builder<A, F> {
-                fieldTitle = title
+            fun title(text: String): Builder<A, F> {
+                fieldTitle = text
                 return this@Builder
             }
 
-            fun title(id: Int): Builder<A, F> {
+            fun title(@StringRes id: Int): Builder<A, F> {
                 getContext()?.getString(id)?.let {
                     return title(it)
                 }
                 return this@Builder
+            }
+
+            fun message(text: String): Builder<A, F> {
+                fieldMessage = text
+                return this@Builder
+            }
+
+            fun message(@StringRes id: Int): Builder<A, F> {
+                getContext()?.getString(id)?.let {
+                    return message(it)
+                }
+                return this@Builder
+            }
+
+            fun items(vararg items: String?) {
+                fieldItems = arrayOf(*items)
+            }
+
+            fun positive(text: String): Builder<A, F> {
+                fieldPositiveButtonLabel = text
+                return this@Builder
+            }
+
+            fun positive(@StringRes id: Int): Builder<A, F> {
+                getContext()?.getString(id)?.let {
+                    return positive(it)
+                }
+                return this@Builder
+            }
+
+            fun negative(text: String): Builder<A, F> {
+                fieldNegativeButtonLabel = text
+                return this@Builder
+            }
+
+            fun negative(@StringRes id: Int): Builder<A, F> {
+                getContext()?.getString(id)?.let {
+                    return negative(it)
+                }
+                return this@Builder
+            }
+
+            fun requestCode(requestCode: Int): Builder<A, F> {
+                fieldRequestCode = requestCode
+                return this@Builder
+            }
+
+            fun tag(tag: String): Builder<A, F> {
+                fieldTags = tag
+                return this@Builder
+            }
+
+            fun params(param: Bundle): Builder<A, F> {
+                fieldParams = param
+                return this@Builder
+            }
+
+            fun cancelable(cancel: Boolean): Builder<A, F> {
+                fieldCancelable = cancel
+                return this@Builder
+            }
+
+            fun show() {
+                LocalDialogFragment().also { f ->
+                    Bundle().apply {
+                        putString("title", fieldTitle)
+                        putString("message", fieldMessage)
+                        putStringArray("items", fieldItems)
+                        putString("positive_label", fieldPositiveButtonLabel)
+                        putString("negative_label", fieldNegativeButtonLabel)
+                        putBoolean("cancelable", fieldCancelable)
+
+                        fieldParams?.let {
+                            putBundle("params", it)
+                        }
+                        fieldFragment?.let {
+                            f.setTargetFragment(it, fieldRequestCode)
+                            f.show(it.childFragmentManager, fieldTags)
+                        }?.run {
+                            putInt("request_code", fieldRequestCode)
+                            f.arguments = this@apply
+                            f.show(fieldActivity?.supportFragmentManager, fieldTags)
+                        }
+                    }
+                }
             }
         }
     }
