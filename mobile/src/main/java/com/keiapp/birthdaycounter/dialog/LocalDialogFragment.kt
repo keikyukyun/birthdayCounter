@@ -54,12 +54,9 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
         }
 
         // Builderパターンでのダイアログの使い方
-        class Builder<A, F> where A : AppCompatActivity,
-                                  A : DialogActionInterface,
-                                  F : Fragment,
-                                  F : com.keiapp.birthdaycounter.dialog.DialogActionInterface {
-            private var fieldActivity: AppCompatActivity?
-            private var fieldFragment: Fragment?
+        class Builder {
+            private var fieldActivity: AppCompatActivity? = null
+            private var fieldFragment: Fragment? = null
             private var fieldTitle: String? = null
             private var fieldMessage: String? = null
             private var fieldItems: Array<String?>? = null
@@ -70,14 +67,18 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
             private var fieldTags: String? = "default"
             private var fieldCancelable = true
 
-            constructor(activity: A) {
+            fun <A> newInstance(activity: A): Builder where A : AppCompatActivity,
+                                                            A : DialogActionInterface {
                 fieldActivity = activity
                 fieldFragment = null
+                return this@Builder
             }
 
-            constructor(fragment: F) {
-                fieldFragment = fragment
+            fun <F> newInstance(fragment: F): Builder where F : Fragment,
+                                                            F : DialogActionInterface {
                 fieldActivity = null
+                fieldFragment = fragment
+                return this@Builder
             }
 
             private fun getContext(): Context? {
@@ -90,24 +91,24 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
                 return null
             }
 
-            fun title(text: String): Builder<A, F> {
+            fun title(text: String): Builder {
                 fieldTitle = text
                 return this@Builder
             }
 
-            fun title(@StringRes id: Int): Builder<A, F> {
+            fun title(@StringRes id: Int): Builder {
                 getContext()?.getString(id)?.let {
                     return title(it)
                 }
                 return this@Builder
             }
 
-            fun message(text: String): Builder<A, F> {
+            fun message(text: String): Builder {
                 fieldMessage = text
                 return this@Builder
             }
 
-            fun message(@StringRes id: Int): Builder<A, F> {
+            fun message(@StringRes id: Int): Builder {
                 getContext()?.getString(id)?.let {
                     return message(it)
                 }
@@ -118,46 +119,46 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
                 fieldItems = arrayOf(*items)
             }
 
-            fun positive(text: String): Builder<A, F> {
+            fun positive(text: String): Builder {
                 fieldPositiveButtonLabel = text
                 return this@Builder
             }
 
-            fun positive(@StringRes id: Int): Builder<A, F> {
+            fun positive(@StringRes id: Int): Builder {
                 getContext()?.getString(id)?.let {
                     return positive(it)
                 }
                 return this@Builder
             }
 
-            fun negative(text: String): Builder<A, F> {
+            fun negative(text: String): Builder {
                 fieldNegativeButtonLabel = text
                 return this@Builder
             }
 
-            fun negative(@StringRes id: Int): Builder<A, F> {
+            fun negative(@StringRes id: Int): Builder {
                 getContext()?.getString(id)?.let {
                     return negative(it)
                 }
                 return this@Builder
             }
 
-            fun requestCode(requestCode: Int): Builder<A, F> {
+            fun requestCode(requestCode: Int): Builder {
                 fieldRequestCode = requestCode
                 return this@Builder
             }
 
-            fun tag(tag: String): Builder<A, F> {
+            fun tag(tag: String): Builder {
                 fieldTags = tag
                 return this@Builder
             }
 
-            fun params(param: Bundle): Builder<A, F> {
+            fun params(param: Bundle): Builder {
                 fieldParams = param
                 return this@Builder
             }
 
-            fun cancelable(cancel: Boolean): Builder<A, F> {
+            fun cancelable(cancel: Boolean): Builder {
                 fieldCancelable = cancel
                 return this@Builder
             }
