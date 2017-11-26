@@ -19,22 +19,83 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
 
     override fun onClick(dialog: DialogInterface?, which: Int) {
         when (which) {
-            DialogInterface.BUTTON_POSITIVE -> mEventListener?.agreed()
-            DialogInterface.BUTTON_NEGATIVE -> mEventListener?.cancel()
+            DialogInterface.BUTTON_POSITIVE -> mEventListener?.agreed(getRequestCode(), which, arguments.getBundle(ARG_PARAMS))
+            DialogInterface.BUTTON_NEGATIVE -> mEventListener?.cancel(getRequestCode(), arguments.getBundle(ARG_PARAMS))
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(activity)
-                .setPositiveButton("OK", this)
-                .setNegativeButton("キャンセル", this)
-                .setView(mLayoutId)
-        return dialogBuilder.create()
+//        val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(activity)
+//                .setPositiveButton("OK", this)
+//                .setNegativeButton("キャンセル", this)
+//                .setView(mLayoutId)
+//        return dialogBuilder.create()
+
+        var title: String? = null
+        var message: String? = null
+        var items: Array<String>? = null
+        var positiveButtonLabel: String? = null
+        var negativeButtonLabel: String? = null
+
+        arguments.apply {
+            title = getString(ARG_TITLE)
+            message = getString(ARG_MESSAGE)
+            items = getStringArray(ARG_ITEMS)
+            positiveButtonLabel = getString(ARG_POSITIVE_BUTTON_LABEL)
+            negativeButtonLabel = getString(ARG_NEGATIVE_BUTTON_LABEL)
+            isCancelable = getBoolean(ARG_CANCELABLE)
+        }
+
+        val builder: AlertDialog.Builder = AlertDialog.Builder(activity).apply {
+            title?.let {
+                setTitle(title)
+            }
+
+            message?.let { setMessage(it) }
+            items?.let {
+                if (it.isNotEmpty()) {
+                    setItems(items, this@LocalDialogFragment)
+                }
+            }
+            positiveButtonLabel?.let {
+                setPositiveButton(it, this@LocalDialogFragment)
+            }
+            negativeButtonLabel?.let {
+                setNegativeButton(it, this@LocalDialogFragment)
+            }
+        }
+
+        return builder.create()
+    }
+
+    override fun onCancel(dialog: DialogInterface?) {
+        mEventListener?.let {
+            it.cancel(getRequestCode(), arguments.getBundle(ARG_PARAMS))
+        }
+    }
+
+    private fun getRequestCode(): Int {
+        arguments.also { args ->
+            if (args.containsKey(ARG_REQUEST_CODE)) {
+                return args.getInt(ARG_REQUEST_CODE)
+            }
+        }
+        return targetRequestCode
     }
 
     companion object {
         private val ARG_LAYOUT_ID = "param1"
         private val ARG_LISTENER_ID = "litener"
+
+        private const val ARG_TITLE = "title"
+        private const val ARG_MESSAGE = "message"
+        private const val ARG_ITEMS = "items"
+        private const val ARG_POSITIVE_BUTTON_LABEL = "positive_button_label"
+        private const val ARG_NEGATIVE_BUTTON_LABEL = "negative_button_label"
+        private const val ARG_REQUEST_CODE = "request_code"
+        private const val ARG_PARAMS = "params"
+        private const val ARG_CANCELABLE = "cancelable"
+
 
         /**
          * Use this factory method to create a new instance of
@@ -166,15 +227,15 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
             fun show() {
                 LocalDialogFragment().also { f ->
                     Bundle().apply {
-                        putString("title", fieldTitle)
-                        putString("message", fieldMessage)
-                        putStringArray("items", fieldItems)
-                        putString("positive_label", fieldPositiveButtonLabel)
-                        putString("negative_label", fieldNegativeButtonLabel)
-                        putBoolean("cancelable", fieldCancelable)
+                        putString(ARG_TITLE, fieldTitle)
+                        putString(ARG_MESSAGE, fieldMessage)
+                        putStringArray(ARG_ITEMS, fieldItems)
+                        putString(ARG_POSITIVE_BUTTON_LABEL, fieldPositiveButtonLabel)
+                        putString(ARG_NEGATIVE_BUTTON_LABEL, fieldNegativeButtonLabel)
+                        putBoolean(ARG_CANCELABLE, fieldCancelable)
 
                         fieldParams?.let {
-                            putBundle("params", it)
+                            putBundle(ARG_PARAMS, it)
                         }
                         fieldFragment?.let {
                             f.setTargetFragment(it, fieldRequestCode)

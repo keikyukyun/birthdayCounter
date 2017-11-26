@@ -41,12 +41,12 @@ class InputScheduleDateActivity : AppCompatActivity(), IActionEventListener, Dia
                 .show()
     }
 
-    override fun cancel() {
+    override fun cancel(requestCode: Int, params: Bundle) {
     }
 
-    override fun agreed() {
+    override fun agreed(requestCode: Int, resultCode: Int, params: Bundle) {
     }
 
-    override fun continued() {
+    override fun continued(requestCode: Int, params: Bundle) {
     }
 }

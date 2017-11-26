@@ -1,5 +1,6 @@
 package com.keiapp.birthdaycounter.dialog
 
+import android.os.Bundle
 import java.io.Serializable
 
 /**
@@ -9,15 +10,15 @@ interface DialogActionInterface : Serializable {
     /**
      * ダイアログでキャンセルをした。
      */
-    fun cancel()
+    fun cancel(requestCode: Int, params: Bundle)
 
     /**
      * ダイアログで決定した。
      */
-    fun agreed()
+    fun agreed(requestCode: Int, resultCode: Int, params: Bundle)
 
     /**
-     *
+     * ダイアログの第三ボタンを選択した
      */
-    fun continued()
+    fun continued(requestCode: Int, params: Bundle)
 }
