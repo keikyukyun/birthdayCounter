@@ -17,8 +17,8 @@ class DialogUtils {
          * @param tag ダイアログの識別子
          */
         fun showDatePickerDialog(activity: FragmentActivity, listener: DialogActionInterface, layoutId: Int, tag: String) {
-            sDialog = LocalDialogFragment.newInstance(listener, layoutId)
-            showDialog(activity, tag)
+//            sDialog = LocalDialogFragment.newInstance(listener, layoutId)
+//            showDialog(activity, tag)
         }
 
 

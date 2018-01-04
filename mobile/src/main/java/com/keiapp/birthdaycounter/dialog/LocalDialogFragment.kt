@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
@@ -13,14 +14,28 @@ import android.support.v7.app.AppCompatActivity
 class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInterface.OnClickListener {
     private val mLayoutId: Int by lazy { arguments.getInt(ARG_LAYOUT_ID) }
 
-    private val mEventListener: DialogActionInterface? by lazy {
-        arguments.getSerializable(ARG_LISTENER_ID) as DialogActionInterface
-    }
+    private lateinit var mEventListener: DialogActionInterface
 
     override fun onClick(dialog: DialogInterface?, which: Int) {
         when (which) {
-            DialogInterface.BUTTON_POSITIVE -> mEventListener?.agreed(getRequestCode(), which, arguments.getBundle(ARG_PARAMS))
-            DialogInterface.BUTTON_NEGATIVE -> mEventListener?.cancel(getRequestCode(), arguments.getBundle(ARG_PARAMS))
+            DialogInterface.BUTTON_POSITIVE -> {
+                mEventListener.agreed(getRequestCode(), which, arguments.getBundle(ARG_PARAMS))
+            }
+            DialogInterface.BUTTON_NEGATIVE -> {
+                mEventListener.cancel(getRequestCode(), arguments.getBundle(ARG_PARAMS))
+            }
+        }
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        var callback: Any? = parentFragment
+        mEventListener = if (callback == null) {
+            callback = activity as? DialogActionInterface ?: throw IllegalArgumentException()
+            callback as DialogActionInterface
+        } else {
+            callback as DialogActionInterface
         }
     }
 
@@ -36,14 +51,16 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
         var items: Array<String>? = null
         var positiveButtonLabel: String? = null
         var negativeButtonLabel: String? = null
+        var customLayoutId: Int = -1
 
-        arguments.apply {
-            title = getString(ARG_TITLE)
-            message = getString(ARG_MESSAGE)
-            items = getStringArray(ARG_ITEMS)
-            positiveButtonLabel = getString(ARG_POSITIVE_BUTTON_LABEL)
-            negativeButtonLabel = getString(ARG_NEGATIVE_BUTTON_LABEL)
-            isCancelable = getBoolean(ARG_CANCELABLE)
+        arguments?.let {
+            title = it.getString(ARG_TITLE)
+            message = it.getString(ARG_MESSAGE)
+            items = it.getStringArray(ARG_ITEMS)
+            positiveButtonLabel = it.getString(ARG_POSITIVE_BUTTON_LABEL)
+            negativeButtonLabel = it.getString(ARG_NEGATIVE_BUTTON_LABEL)
+            isCancelable = it.getBoolean(ARG_CANCELABLE)
+            customLayoutId = it.getInt(ARG_CUSTOM_LAYOUT_ID)
         }
 
         val builder: AlertDialog.Builder = AlertDialog.Builder(activity).apply {
@@ -62,6 +79,9 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
             }
             negativeButtonLabel?.let {
                 setNegativeButton(it, this@LocalDialogFragment)
+            }
+            if (customLayoutId > 0) {
+                setView(customLayoutId)
             }
         }
 
@@ -85,7 +105,7 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
 
     companion object {
         private val ARG_LAYOUT_ID = "param1"
-        private val ARG_LISTENER_ID = "litener"
+        private val ARG_LISTENER_ID = "listener"
 
         private const val ARG_TITLE = "title"
         private const val ARG_MESSAGE = "message"
@@ -95,6 +115,7 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
         private const val ARG_REQUEST_CODE = "request_code"
         private const val ARG_PARAMS = "params"
         private const val ARG_CANCELABLE = "cancelable"
+        private const val ARG_CUSTOM_LAYOUT_ID = "custom_layout_id"
 
 
         /**
@@ -124,9 +145,10 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
             private var fieldPositiveButtonLabel: String? = null
             private var fieldNegativeButtonLabel: String? = null
             private var fieldRequestCode: Int = -1
-            private var fieldParams: Bundle? = null
+            private var fieldParams: Bundle? = Bundle()
             private var fieldTags: String? = "default"
             private var fieldCancelable = true
+            private var fieldCustomLayoutId: Int = -1
 
             fun <A> newInstance(activity: A): Builder where A : AppCompatActivity,
                                                             A : DialogActionInterface {
@@ -224,6 +246,11 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
                 return this@Builder
             }
 
+            fun view(@LayoutRes id: Int): Builder {
+                fieldCustomLayoutId = id
+                return this@Builder
+            }
+
             fun show() {
                 LocalDialogFragment().also { f ->
                     Bundle().apply {
@@ -233,17 +260,23 @@ class LocalDialogFragment : AbstractDialogFragment<DialogFragment>(), DialogInte
                         putString(ARG_POSITIVE_BUTTON_LABEL, fieldPositiveButtonLabel)
                         putString(ARG_NEGATIVE_BUTTON_LABEL, fieldNegativeButtonLabel)
                         putBoolean(ARG_CANCELABLE, fieldCancelable)
+                        putInt(ARG_CUSTOM_LAYOUT_ID, fieldCustomLayoutId)
 
                         fieldParams?.let {
                             putBundle(ARG_PARAMS, it)
                         }
                         fieldFragment?.let {
+                            f.arguments = this@apply
                             f.setTargetFragment(it, fieldRequestCode)
-                            f.show(it.childFragmentManager, fieldTags)
-                        }?.run {
+                            f.show(it.fragmentManager, fieldTags)
+                            return
+                        }
+
+                        fieldActivity?.let {
                             putInt("request_code", fieldRequestCode)
                             f.arguments = this@apply
-                            f.show(fieldActivity?.supportFragmentManager, fieldTags)
+                            f.show(it.supportFragmentManager, fieldTags)
+                            return
                         }
                     }
                 }

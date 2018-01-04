@@ -12,6 +12,7 @@ import com.keiapp.birthdaycounter.IActionEventListener
 import com.keiapp.birthdaycounter.R
 import com.keiapp.birthdaycounter.dialog.DialogActionInterface
 import com.keiapp.birthdaycounter.dialog.DialogUtils
+import com.keiapp.birthdaycounter.dialog.LocalDialogFragment
 
 /**
  * create an instance of this fragment.
@@ -47,7 +48,14 @@ class InputScheduleFragment : Fragment(), DialogActionInterface {
 
         val edit: EditText = view.findViewById<View>(R.id.schedule_edit_text) as EditText
         edit.setOnClickListener({
-            DialogUtils.showDatePickerDialog(activity, this, R.layout.fragment_dialog, "dialog_fragment")
+            //            DialogUtils.showDatePickerDialog(activity, this, R.layout.fragment_dialog, "dialog_fragment")
+            LocalDialogFragment.Companion.Builder().newInstance(this)
+                    .title("日付を選択")
+                    .message("出産予定日を選択してください。")
+                    .view(R.layout.fragment_dialog)
+                    .positive("OK")
+                    .negative("キャンセル")
+                    .show()
         })
 
 
@@ -77,17 +85,15 @@ class InputScheduleFragment : Fragment(), DialogActionInterface {
         mEventListener = null
     }
 
-    override fun cancel() {
+    override fun cancel(requestCode: Int, params: Bundle) {
         android.util.Log.e("mura", "cancel")
         DialogUtils.dismiss()
     }
 
-    override fun agreed() {
-
+    override fun agreed(requestCode: Int, resultCode: Int, params: Bundle) {
     }
 
-    override fun continued() {
-
+    override fun continued(requestCode: Int, params: Bundle) {
     }
 
     companion object {
